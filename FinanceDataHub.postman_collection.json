@@ -1,0 +1,294 @@
+{
+  "info": {
+    "name": "FinanceDataHub API",
+    "_postman_id": "finance-data-hub-v1",
+    "description": "Complete API collection for FinanceDataHub backend. Uses MongoDB + Express.\n\n## Setup\n1. Set `base_url` variable to `http://localhost:3000`\n2. Set `user_id` to `1` (Admin), `2` (Analyst), or `3` (Viewer)\n3. Run **Health Check** first to confirm server is up.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000", "type": "string" },
+    { "key": "user_id",  "value": "1",                    "type": "string", "description": "1=Admin, 2=Analyst, 3=Viewer" },
+    { "key": "txn_id",   "value": "",                     "type": "string", "description": "Set after creating a transaction" },
+    { "key": "user_obj_id", "value": "",                  "type": "string", "description": "Set after creating a user" }
+  ],
+  "item": [
+    {
+      "name": "🟢 Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/health", "host": ["{{base_url}}"], "path": ["api", "health"] },
+            "description": "No auth required. Returns server + MongoDB connection status."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👤 Auth / Me",
+      "item": [
+        {
+          "name": "Get Current User (Me)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/me", "host": ["{{base_url}}"], "path": ["api", "me"] },
+            "header": [{ "key": "x-user-id", "value": "{{user_id}}", "description": "1=Admin | 2=Analyst | 3=Viewer" }],
+            "description": "Returns the user object for whichever x-user-id is set."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👥 Users (Admin only)",
+      "item": [
+        {
+          "name": "List All Users",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/users", "host": ["{{base_url}}"], "path": ["api", "users"] },
+            "header": [{ "key": "x-user-id", "value": "1", "description": "Must be Admin (id=1)" }],
+            "description": "Returns all users. Admin only."
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json._id) pm.collectionVariables.set('user_obj_id', json._id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/api/users", "host": ["{{base_url}}"], "path": ["api", "users"] },
+            "header": [
+              { "key": "x-user-id",     "value": "1" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Analyst\",\n  \"email\": \"newanalyst@example.com\",\n  \"role\": \"Analyst\",\n  \"status\": \"active\"\n}"
+            },
+            "description": "Creates a new user. Admin only. Auto-saves returned `_id` to `user_obj_id` variable."
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_obj_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_obj_id}}"]
+            },
+            "header": [
+              { "key": "x-user-id",    "value": "1" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Analyst\",\n  \"email\": \"newanalyst@example.com\",\n  \"role\": \"Analyst\",\n  \"status\": \"inactive\"\n}"
+            },
+            "description": "Updates a user by MongoDB _id. Requires `user_obj_id` variable set."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_obj_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_obj_id}}"]
+            },
+            "header": [{ "key": "x-user-id", "value": "1" }],
+            "description": "Hard-deletes a user by MongoDB _id. Admin only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💰 Transactions",
+      "item": [
+        {
+          "name": "List Transactions (All)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/transactions?limit=20&offset=0",
+              "host": ["{{base_url}}"],
+              "path": ["api", "transactions"],
+              "query": [
+                { "key": "limit",  "value": "20" },
+                { "key": "offset", "value": "0" }
+              ]
+            },
+            "header": [{ "key": "x-user-id", "value": "{{user_id}}" }],
+            "description": "Lists all non-deleted transactions. Supports pagination."
+          },
+          "response": []
+        },
+        {
+          "name": "List Transactions (Filtered)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/transactions?type=expense&category=Rent&startDate=2026-04-01&endDate=2026-04-30&limit=10&offset=0",
+              "host": ["{{base_url}}"],
+              "path": ["api", "transactions"],
+              "query": [
+                { "key": "type",       "value": "expense" },
+                { "key": "category",   "value": "Rent" },
+                { "key": "startDate",  "value": "2026-04-01" },
+                { "key": "endDate",    "value": "2026-04-30" },
+                { "key": "limit",      "value": "10" },
+                { "key": "offset",     "value": "0" }
+              ]
+            },
+            "header": [{ "key": "x-user-id", "value": "{{user_id}}" }],
+            "description": "Filter by type, category, date range. All params optional."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Transactions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/transactions?search=salary",
+              "host": ["{{base_url}}"],
+              "path": ["api", "transactions"],
+              "query": [{ "key": "search", "value": "salary" }]
+            },
+            "header": [{ "key": "x-user-id", "value": "{{user_id}}" }],
+            "description": "Full-text search on category + description fields."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Transaction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json._id) pm.collectionVariables.set('txn_id', json._id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/api/transactions", "host": ["{{base_url}}"], "path": ["api", "transactions"] },
+            "header": [
+              { "key": "x-user-id",    "value": "1", "description": "Admin only" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 2500,\n  \"type\": \"income\",\n  \"category\": \"Freelance\",\n  \"date\": \"2026-04-06\",\n  \"description\": \"Design project payment\"\n}"
+            },
+            "description": "Creates a transaction. Admin only. Auto-saves `_id` to `txn_id` variable."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Transaction",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/api/transactions/{{txn_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "transactions", "{{txn_id}}"]
+            },
+            "header": [
+              { "key": "x-user-id",    "value": "1" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 3000,\n  \"type\": \"income\",\n  \"category\": \"Freelance\",\n  \"date\": \"2026-04-06\",\n  \"description\": \"Updated payment amount\"\n}"
+            },
+            "description": "Updates a transaction. Admin only. Uses `txn_id` variable."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Transaction (Soft)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/transactions/{{txn_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "transactions", "{{txn_id}}"]
+            },
+            "header": [{ "key": "x-user-id", "value": "1" }],
+            "description": "Soft-deletes a transaction (sets isDeleted=true). Admin only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📊 Dashboard",
+      "item": [
+        {
+          "name": "Get Summary",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/summary", "host": ["{{base_url}}"], "path": ["api", "summary"] },
+            "header": [{ "key": "x-user-id", "value": "{{user_id}}" }],
+            "description": "Returns totalIncome, totalExpense, netBalance, categoryWise breakdown, recentActivity (last 5), and weeklyTrends (last 7 days)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔒 Role Tests",
+      "item": [
+        {
+          "name": "Viewer tries to POST transaction (should 403)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/api/transactions", "host": ["{{base_url}}"], "path": ["api", "transactions"] },
+            "header": [
+              { "key": "x-user-id",    "value": "3", "description": "Viewer — should get 403" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 100,\n  \"type\": \"expense\",\n  \"category\": \"Test\",\n  \"date\": \"2026-04-06\"\n}"
+            },
+            "description": "Expected response: 403 Forbidden"
+          },
+          "response": []
+        },
+        {
+          "name": "No Header (should 401)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/me", "host": ["{{base_url}}"], "path": ["api", "me"] },
+            "description": "No x-user-id header. Expected: 401 Unauthorized"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

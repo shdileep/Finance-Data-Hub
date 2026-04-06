@@ -1,0 +1,5 @@
+{
+  "name": "FinanceDataHub",
+  "description": "A robust financial data processing and access control backend with a dashboard for tracking transactions, roles, and summaries.",
+  "requestFramePermissions": []
+}
