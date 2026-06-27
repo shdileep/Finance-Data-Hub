@@ -11,6 +11,28 @@ export default function Reports({ user }: { user: User }) {
   const [dateTo, setDateTo] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
 
+  // Recurring schedules
+  const [scheduleInterval, setScheduleInterval] = useState('monthly');
+  const [scheduleActive, setScheduleActive] = useState(true);
+
+  const applyTemplate = (tpl: string) => {
+    const today = new Date();
+    if (tpl === 'monthly_summary') {
+      const y = today.getFullYear();
+      const m = today.getMonth() + 1;
+      const mStr = m < 10 ? `0${m}` : `${m}`;
+      setDateFrom(`${y}-${mStr}-01`);
+      setDateTo(today.toISOString().split('T')[0]);
+      setTypeFilter('');
+    } else if (tpl === 'anomaly_audit') {
+      const prevDate = new Date();
+      prevDate.setDate(today.getDate() - 90);
+      setDateFrom(prevDate.toISOString().split('T')[0]);
+      setDateTo(today.toISOString().split('T')[0]);
+      setTypeFilter('expense');
+    }
+  };
+
   const fetchData = useCallback(() => {
     setLoading(true); setError(null);
     const params = new URLSearchParams({ limit: '500' });
@@ -69,31 +91,84 @@ export default function Reports({ user }: { user: User }) {
         </button>
       </header>
 
-      {/* Filters */}
-      <div className="glass-card p-4 flex flex-wrap gap-4 items-end">
-        <div className="flex-[0_0_180px]">
-          <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-2">From Date</label>
-          <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
-            className="w-full p-2.5 glass-input !text-text-primary [color-scheme:dark]" />
+      {/* Templates & Schedules config */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Filters */}
+        <div className="lg:col-span-2 glass-card p-5 flex flex-wrap gap-4 items-end">
+          <div className="flex-[0_0_180px]">
+            <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-2">From Date</label>
+            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
+              className="w-full p-2.5 glass-input !text-text-primary [color-scheme:dark]" />
+          </div>
+          <div className="flex-[0_0_180px]">
+            <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-2">To Date</label>
+            <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
+              className="w-full p-2.5 glass-input !text-text-primary [color-scheme:dark]" />
+          </div>
+          <div className="flex-[0_0_150px]">
+            <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-2">Type</label>
+            <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
+              className="w-full p-2.5 glass-input appearance-none bg-bg-secondary/80 text-text-primary">
+              <option value="">All</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+          </div>
+          <button onClick={() => { setDateFrom(''); setDateTo(''); setTypeFilter(''); }}
+            className="px-4 py-2.5 text-sm font-bold text-text-secondary bg-bg-secondary border border-border-primary hover:bg-bg-primary rounded-xl h-[46px] transition-all">
+            Reset
+          </button>
         </div>
-        <div className="flex-[0_0_180px]">
-          <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-2">To Date</label>
-          <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
-            className="w-full p-2.5 glass-input !text-text-primary [color-scheme:dark]" />
+
+        {/* Preset Templates */}
+        <div className="glass-card p-5 space-y-3">
+          <h4 className="text-xs font-bold text-text-primary uppercase tracking-wider">Report Templates</h4>
+          <div className="flex flex-col gap-2">
+            <button 
+              onClick={() => applyTemplate('monthly_summary')}
+              className="w-full text-left px-3 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 hover:text-white rounded border border-slate-700 transition-colors"
+            >
+              💼 Monthly Executive Summary
+            </button>
+            <button 
+              onClick={() => applyTemplate('anomaly_audit')}
+              className="w-full text-left px-3 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 hover:text-white rounded border border-slate-700 transition-colors"
+            >
+              🔍 90-Day Anomaly Audit
+            </button>
+          </div>
         </div>
-        <div className="flex-[0_0_150px]">
-          <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-2">Type</label>
-          <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
-            className="w-full p-2.5 glass-input appearance-none bg-bg-secondary/80 text-text-primary">
-            <option value="">All</option>
-            <option value="income">Income</option>
-            <option value="expense">Expense</option>
+      </div>
+
+      {/* Automated Recurring Reports Scheduling */}
+      <div className="glass-card p-5 grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+        <div>
+          <h4 className="text-sm font-bold text-text-primary">Automated Recurring Report Builder</h4>
+          <p className="text-xs text-slate-400 mt-1">Configure system to compile and email summaries automatically.</p>
+        </div>
+        <div className="flex items-center gap-4 justify-end">
+          <select 
+            value={scheduleInterval} 
+            onChange={e => setScheduleInterval(e.target.value)}
+            className="bg-bg-primary border border-border-primary rounded px-3 py-1.5 text-xs text-text-primary font-medium"
+          >
+            <option value="weekly">Weekly Schedule</option>
+            <option value="monthly">Monthly Schedule</option>
           </select>
+          <button 
+            onClick={() => {
+              setScheduleActive(!scheduleActive);
+              alert(`Recurring ${scheduleInterval} report status toggled to: ${!scheduleActive ? 'Active' : 'Inactive'}`);
+            }}
+            className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-colors ${
+              scheduleActive 
+                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
+                : 'bg-slate-800 text-slate-400 border border-transparent'
+            }`}
+          >
+            {scheduleActive ? 'ACTIVE' : 'INACTIVE'}
+          </button>
         </div>
-        <button onClick={() => { setDateFrom(''); setDateTo(''); setTypeFilter(''); }}
-          className="px-4 py-2.5 text-sm font-bold text-text-secondary bg-bg-secondary border border-border-primary hover:bg-bg-primary rounded-xl h-[46px]">
-          Reset
-        </button>
       </div>
 
       {/* Summary Cards */}

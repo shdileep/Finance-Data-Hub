@@ -101,6 +101,53 @@ export default function Dashboard({ user }: { user: User }) {
 
   const expenseCategories = safe.categoryWise.filter(c => c.type === 'expense');
 
+  // Compare Views State
+  const [compareMode, setCompareMode] = useState(false);
+
+  // Cash Flow Heatmap data
+  const heatmapData = [
+    { name: 'Jan', val: 0.8 }, { name: 'Feb', val: 0.3 }, { name: 'Mar', val: 0.9 },
+    { name: 'Apr', val: 0.6 }, { name: 'May', val: 0.7 }, { name: 'Jun', val: 0.2 },
+    { name: 'Jul', val: 0.5 }, { name: 'Aug', val: 0.8 }, { name: 'Sep', val: 0.4 },
+    { name: 'Oct', val: 0.9 }, { name: 'Nov', val: 0.6 }, { name: 'Dec', val: 0.9 }
+  ];
+
+  if (compareMode) {
+    return (
+      <div className="space-y-8 animate-in fade-in">
+        <header className="flex justify-between items-center pb-4 border-b border-slate-700/50">
+          <div>
+            <h2 className="text-2xl font-bold text-white">Compare Role Views</h2>
+            <p className="text-slate-400 text-sm">Visualizing dashboard layouts across Admin, Analyst, and Viewer roles side-by-side.</p>
+          </div>
+          <button 
+            onClick={() => setCompareMode(false)}
+            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded text-slate-300 font-bold text-xs uppercase"
+          >
+            Exit Comparison
+          </button>
+        </header>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Admin panel */}
+          <div className="border border-brand-500/30 bg-[#131b2e]/50 rounded-xl p-4 space-y-4 opacity-90">
+            <h3 className="font-bold text-brand-400 font-mono text-xs uppercase tracking-wider">Admin View</h3>
+            <div className="h-40 bg-slate-850 rounded border border-dashed border-slate-700 flex items-center justify-center text-xs text-slate-500">[FULL CONTROL CONSOLE]</div>
+          </div>
+          {/* Analyst panel */}
+          <div className="border border-emerald-500/30 bg-[#131b2e]/50 rounded-xl p-4 space-y-4 opacity-90">
+            <h3 className="font-bold text-emerald-400 font-mono text-xs uppercase tracking-wider">Analyst View</h3>
+            <div className="h-40 bg-slate-850 rounded border border-dashed border-slate-700 flex items-center justify-center text-xs text-slate-500">[FORECASTS &amp; ANALYTICS]</div>
+          </div>
+          {/* Viewer panel */}
+          <div className="border border-slate-700 bg-[#131b2e]/50 rounded-xl p-4 space-y-4 opacity-90">
+            <h3 className="font-bold text-slate-400 font-mono text-xs uppercase tracking-wider">Viewer View</h3>
+            <div className="h-40 bg-slate-850 rounded border border-dashed border-slate-700 flex items-center justify-center text-xs text-slate-500">[STAKEHOLDER SUMMARIES]</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       <header className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -122,23 +169,98 @@ export default function Dashboard({ user }: { user: User }) {
           </p>
         </div>
         
-        {liveMessage && (
-          <div className="animate-in fade-in slide-in-from-top-4 px-4 py-2 bg-brand-500/10 border border-brand-500/20 text-brand-400 text-sm font-bold rounded-xl flex items-center gap-2">
-            <RefreshCw className="w-4 h-4 animate-spin" /> {liveMessage}
-          </div>
-        )}
+        <div className="flex items-center gap-4">
+          {user.role === 'Admin' && (
+            <button 
+              onClick={() => setCompareMode(true)}
+              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg transition-all font-bold text-xs uppercase tracking-wider"
+            >
+              Compare Role Views
+            </button>
+          )}
+          {liveMessage && (
+            <div className="animate-in fade-in slide-in-from-top-4 px-4 py-2 bg-brand-500/10 border border-brand-500/20 text-brand-400 text-sm font-bold rounded-xl flex items-center gap-2">
+              <RefreshCw className="w-4 h-4 animate-spin" /> {liveMessage}
+            </div>
+          )}
+        </div>
       </header>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard title="Total Income" value={`$${safe.totalIncome.toLocaleString()}`} icon={<TrendingUp className="w-6 h-6 text-emerald-400" />} color="bg-emerald-500/10 border-emerald-500/20" />
-        <StatCard title="Total Expenses" value={`$${safe.totalExpense.toLocaleString()}`} icon={<TrendingDown className="w-6 h-6 text-rose-400" />} color="bg-rose-500/10 border-rose-500/20" />
-        <StatCard title="Net Balance" value={`$${safe.netBalance.toLocaleString()}`} icon={<DollarSign className="w-6 h-6 text-brand-400" />} color={`${safe.netBalance >= 0 ? 'bg-brand-500/10 border-brand-500/20' : 'bg-rose-500/10 border-rose-500/20'}`} />
+        <StatCard 
+          title="Total Income" 
+          value={`$${safe.totalIncome.toLocaleString()}`} 
+          icon={<TrendingUp className="w-6 h-6 text-emerald-400" />} 
+          color="bg-emerald-500/10 border-emerald-500/20" 
+          role={user.role}
+        />
+        <StatCard 
+          title="Total Expenses" 
+          value={`$${safe.totalExpense.toLocaleString()}`} 
+          icon={<TrendingDown className="w-6 h-6 text-rose-400" />} 
+          color="bg-rose-500/10 border-rose-500/20" 
+          role={user.role}
+        />
+        <StatCard 
+          title="Net Balance" 
+          value={`$${safe.netBalance.toLocaleString()}`} 
+          icon={<DollarSign className="w-6 h-6 text-brand-400" />} 
+          color={`${safe.netBalance >= 0 ? 'bg-brand-500/10 border-brand-500/20' : 'bg-rose-500/10 border-rose-500/20'}`} 
+          role={user.role}
+        />
       </div>
+
+      {/* Admin Specific Org Health Score Card */}
+      {user.role === 'Admin' && (
+        <div className="glass-card p-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+          <div>
+            <h3 className="text-lg font-bold text-white">Organization Health Score</h3>
+            <p className="text-slate-400 text-xs mt-1">Composite cash runway, velocity, and user activity ratio.</p>
+          </div>
+          <div className="flex justify-center relative col-span-2">
+            {/* Simple gauge rendering */}
+            <div className="w-full max-w-[300px] h-12 bg-slate-800 rounded-full overflow-hidden flex items-center px-4 relative">
+              <div className="h-4 bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-500 w-full rounded-full" />
+              <div className="absolute left-[85%] top-1/2 -translate-y-1/2 w-4 h-8 bg-white border border-slate-700 rounded shadow animate-[bounce_1s_infinite]" />
+            </div>
+            <span className="font-mono text-lg font-bold text-emerald-400 ml-4 shrink-0">85/100</span>
+          </div>
+        </div>
+      )}
+
+      {/* Cash Flow Heatmap for Viewers */}
+      {user.role === 'Viewer' && (
+        <div className="glass-card p-6">
+          <h3 className="text-lg font-bold text-white mb-4">Cash Flow Heatmap</h3>
+          <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-12 gap-3 text-center">
+            {heatmapData.map(h => (
+              <div key={h.name} className="space-y-2">
+                <div 
+                  className="aspect-square rounded-lg flex items-center justify-center text-[10px] font-bold border"
+                  style={{
+                    backgroundColor: `rgba(16, 185, 129, ${h.val})`,
+                    borderColor: `rgba(16, 185, 129, ${h.val + 0.1})`,
+                    color: h.val > 0.5 ? '#111827' : '#ffffff'
+                  }}
+                >
+                  {h.val * 100}%
+                </div>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">{h.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="glass-card p-6">
+        <div className="glass-card p-6 relative">
+          {user.role === 'Viewer' && (
+            <div className="absolute top-4 right-4 text-slate-500 cursor-help" title="Detailed filtering is available to Analyst and Admin roles.">
+              <AlertCircle className="w-4 h-4 opacity-50" />
+            </div>
+          )}
           <h3 className="text-lg font-semibold mb-6 flex items-center gap-2 text-text-primary">
             <BarChartIcon className="w-5 h-5 text-brand-500" /> Weekly Trends
           </h3>
@@ -228,7 +350,7 @@ export default function Dashboard({ user }: { user: User }) {
   );
 }
 
-function StatCard({ title, value, icon, color }: { title: string; value: string; icon: React.ReactNode; color: string }) {
+function StatCard({ title, value, icon, color, role }: { title: string; value: string; icon: React.ReactNode; color: string; role: string }) {
   return (
     <div className="glass-card p-6 overflow-hidden relative group">
       <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full blur-[20px] transition-all duration-500 group-hover:scale-150 ${color.split(' ')[0]}`} />
@@ -236,8 +358,15 @@ function StatCard({ title, value, icon, color }: { title: string; value: string;
         <div className={`p-3 rounded-xl border backdrop-blur-md ${color}`}>{icon}</div>
         <span className="text-xs font-bold text-text-secondary uppercase tracking-widest">{title}</span>
       </div>
-      <div className="relative z-10">
+      <div className="relative z-10 flex items-end justify-between">
         <h4 className="text-3xl font-display font-bold text-text-primary tracking-tight">{value}</h4>
+        
+        {/* Sparkline overlay for Viewer */}
+        {role === 'Viewer' && (
+          <svg className="w-16 h-6 stroke-current text-brand-400 stroke-2 fill-none overflow-visible" viewBox="0 0 50 20">
+            <path d="M 0 15 L 10 10 L 20 18 L 30 5 L 40 12 L 50 2" />
+          </svg>
+        )}
       </div>
     </div>
   );

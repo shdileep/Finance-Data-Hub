@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FinanceHub | Precision Financial Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#dae2fd",
+                    "tertiary": "#000000",
+                    "tertiary-fixed-dim": "#adc6ff",
+                    "primary-fixed-dim": "#bec6e0",
+                    "secondary-fixed": "#6ffbbe",
+                    "outline": "#76777d",
+                    "outline-variant": "#c6c6cd",
+                    "surface": "#f8f9ff",
+                    "surface-variant": "#d3e4fe",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#004395",
+                    "secondary": "#006c49",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-secondary-fixed-variant": "#005236",
+                    "surface-container-high": "#dce9ff",
+                    "tertiary-container": "#001a42",
+                    "on-error": "#ffffff",
+                    "on-surface": "#0b1c30",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#d8e2ff",
+                    "surface-bright": "#f8f9ff",
+                    "surface-tint": "#565e74",
+                    "on-tertiary-container": "#3980f4",
+                    "inverse-primary": "#bec6e0",
+                    "primary": "#000000",
+                    "inverse-surface": "#213145",
+                    "surface-container-low": "#eff4ff",
+                    "surface-dim": "#cbdbf5",
+                    "secondary-container": "#6cf8bb",
+                    "on-tertiary": "#ffffff",
+                    "background": "#f8f9ff",
+                    "on-secondary-container": "#00714d",
+                    "primary-container": "#131b2e",
+                    "on-surface-variant": "#45464d",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#002113",
+                    "surface-container-highest": "#d3e4fe",
+                    "surface-container": "#e5eeff",
+                    "on-secondary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "on-tertiary-fixed": "#001a42",
+                    "on-primary-fixed": "#131b2e",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-background": "#0b1c30",
+                    "on-primary-container": "#7c839b",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "margin-mobile": "16px",
+                    "unit": "4px",
+                    "margin-desktop": "40px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Hanken Grotesk"],
+                    "label-caps": ["Inter"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "title-md": ["Hanken Grotesk"],
+                    "headline-lg-mobile": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "data-mono": ["13px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+
+        .role-card {
+            transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease;
+        }
+
+        .role-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.08);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Institutional feel scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-lg overflow-x-hidden min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-surface-container-lowest border-b border-outline-variant">
+<div class="max-w-container-max mx-auto px-margin-desktop flex justify-between items-center h-16">
+<div class="flex items-center gap-3 cursor-pointer active:opacity-80">
+<img alt="FinanceHub Logo" class="w-8 h-8 object-contain" src="data:image/png;base64,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"/>
+<span class="font-headline-lg text-headline-lg font-bold text-tertiary">FinanceHub</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary border-b-2 border-primary font-body-sm py-1" href="#">Home</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low transition-colors font-body-sm px-2 py-1 rounded" href="#">Products</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low transition-colors font-body-sm px-2 py-1 rounded" href="#">Security</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low transition-colors font-body-sm px-2 py-1 rounded" href="#">Institutional</a>
+</nav>
+<div class="flex items-center gap-unit">
+<button class="px-6 py-2 bg-primary-container text-on-primary font-body-sm font-semibold rounded hover:opacity-90 transition-opacity">
+                    Login
+                </button>
+</div>
+</div>
+</header>
+<main class="flex-grow">
+<!-- Hero Section -->
+<section class="relative py-24 md:py-32 overflow-hidden">
+<!-- Decorative background element -->
+<div class="absolute top-0 right-0 -z-10 w-1/2 h-full opacity-5">
+<div class="w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent"></div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="max-w-3xl">
+<span class="inline-block px-3 py-1 bg-surface-container-high text-on-surface-variant font-data-mono text-xs mb-6 rounded-full uppercase tracking-widest">
+                        Institutional Grade Intelligence
+                    </span>
+<h1 class="font-display-lg text-display-lg md:text-[64px] leading-tight mb-8">
+                        Precision Financial <br/>
+<span class="text-secondary">Management &amp; Analytics</span>
+</h1>
+<p class="font-body-lg text-on-surface-variant text-xl mb-12 max-w-xl">
+                        Real insights, seamless transactions. Empowering institutional decision-making through advanced data modeling and real-time ledger management.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="px-8 py-4 bg-primary text-on-primary font-semibold rounded-lg hover:opacity-90 transition-all flex items-center gap-2">
+                            Request Demo
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="px-8 py-4 border border-outline text-on-surface font-semibold rounded-lg hover:bg-surface-container-low transition-all">
+                            View Capability Statement
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats/Social Proof Bar -->
+<section class="bg-surface-container-lowest border-y border-outline-variant py-8">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="flex flex-wrap justify-between items-center gap-8">
+<div class="flex flex-col">
+<span class="font-data-mono text-secondary font-bold text-lg">$4.2B+</span>
+<span class="font-body-sm text-on-surface-variant">Assets Tracked</span>
+</div>
+<div class="w-px h-8 bg-outline-variant hidden md:block"></div>
+<div class="flex flex-col">
+<span class="font-data-mono text-secondary font-bold text-lg">99.99%</span>
+<span class="font-body-sm text-on-surface-variant">Uptime SLA</span>
+</div>
+<div class="w-px h-8 bg-outline-variant hidden md:block"></div>
+<div class="flex flex-col">
+<span class="font-data-mono text-secondary font-bold text-lg">24/7</span>
+<span class="font-body-sm text-on-surface-variant">Real-time Monitoring</span>
+</div>
+<div class="w-px h-8 bg-outline-variant hidden md:block"></div>
+<div class="flex flex-col">
+<span class="font-data-mono text-secondary font-bold text-lg">Global</span>
+<span class="font-body-sm text-on-surface-variant">Compliance Ready</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Role Selection Section -->
+<section class="py-24 bg-surface">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg mb-4">Select Your Access Level</h2>
+<p class="font-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                        Each role contains specialized dashboards tailored to your specific operational needs and regulatory requirements.
+                    </p>
+</div>
+<!-- Role Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Admin Card -->
+<div class="role-card bg-surface-container-lowest border border-outline-variant p-8 rounded-xl flex flex-col items-start h-full">
+<div class="w-14 h-14 bg-primary-container rounded-lg flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-on-primary text-3xl">admin_panel_settings</span>
+</div>
+<h3 class="font-title-md text-title-md mb-3">Admin</h3>
+<p class="font-body-sm text-on-surface-variant mb-10 flex-grow">
+                            Full system control &amp; user management. Manage permissions, audit logs, and global configuration settings for the entire institution.
+                        </p>
+<div class="w-full pt-6 border-t border-outline-variant">
+<ul class="mb-8 space-y-3">
+<li class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                    Identity Management
+                                </li>
+<li class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                    System Auditing
+                                </li>
+</ul>
+<button class="w-full py-3 bg-primary text-on-primary font-semibold rounded-lg hover:bg-opacity-90 transition-colors">
+                                Enter Dashboard
+                            </button>
+</div>
+</div>
+<!-- Analyst Card -->
+<div class="role-card bg-surface-container-lowest border border-outline-variant p-8 rounded-xl flex flex-col items-start h-full">
+<div class="w-14 h-14 bg-surface-container-high rounded-lg flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-on-surface text-3xl">monitoring</span>
+</div>
+<h3 class="font-title-md text-title-md mb-3">Analyst</h3>
+<p class="font-body-sm text-on-surface-variant mb-10 flex-grow">
+                            Financial trends &amp; detailed reporting. Access complex data visualizations, predictive modeling, and exportable financial reports.
+                        </p>
+<div class="w-full pt-6 border-t border-outline-variant">
+<ul class="mb-8 space-y-3">
+<li class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                    Market Trend Analysis
+                                </li>
+<li class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                    Predictive Forecasting
+                                </li>
+</ul>
+<button class="w-full py-3 bg-primary text-on-primary font-semibold rounded-lg hover:bg-opacity-90 transition-colors">
+                                Enter Dashboard
+                            </button>
+</div>
+</div>
+<!-- Viewer Card -->
+<div class="role-card bg-surface-container-lowest border border-outline-variant p-8 rounded-xl flex flex-col items-start h-full">
+<div class="w-14 h-14 bg-surface-container-low rounded-lg flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl">visibility</span>
+</div>
+<h3 class="font-title-md text-title-md mb-3">Viewer</h3>
+<p class="font-body-sm text-on-surface-variant mb-10 flex-grow">
+                            Read-only summaries &amp; record viewing. Ideal for stakeholders requiring high-level visibility without operational control.
+                        </p>
+<div class="w-full pt-6 border-t border-outline-variant">
+<ul class="mb-8 space-y-3">
+<li class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                    Executive Summaries
+                                </li>
+<li class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                    Historical Archiving
+                                </li>
+</ul>
+<button class="w-full py-3 bg-primary text-on-primary font-semibold rounded-lg hover:bg-opacity-90 transition-colors">
+                                Enter Dashboard
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Contextual Visual Section -->
+<section class="py-24 bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant overflow-hidden flex flex-col lg:flex-row shadow-sm">
+<div class="lg:w-1/2 p-12 flex flex-col justify-center">
+<h2 class="font-headline-lg text-headline-lg mb-6">Institutional Grade Analytics Platform</h2>
+<p class="font-body-lg text-on-surface-variant mb-8">
+                            Our platform leverages high-fidelity data streams to provide a comprehensive view of your financial health. Built for the modern enterprise, with security and scalability at its core.
+                        </p>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 bg-secondary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">shield</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm mb-1">Bank-Grade Security</h4>
+<p class="font-body-sm text-on-surface-variant">AES-256 encryption and multi-factor authentication for every access point.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 bg-surface-container-high rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface">sync</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm mb-1">Real-time Reconciliation</h4>
+<p class="font-body-sm text-on-surface-variant">Continuous ledger balancing with automated anomaly detection.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:w-1/2 bg-surface-container-high relative min-h-[400px]">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A clean, high-fidelity user interface dashboard on a sleek monitor. The screen displays complex financial charts, heatmaps, and data tables in a professional navy and slate palette. Soft morning light hits the modern office setting, emphasizing a professional and focused atmosphere for high-stakes financial analysis." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCgsu3qaE5llBtyR6UqKiL4p04b4Q-7QeDYKPJh4Qts9vR3gLZ5mPWOwW1T_dupi1iW_4Mm5XfM_OkoAnMiII5_APMMSlFKeTVjyiU4W2vqDJ0yprhytGuO-8N3WL8a2MMuraMM7GWb9OrV2Ggg6n9hRwSPq9YEiNbu9GJACsv-iy1bqc0SnkNxOptdwLxxcOpAFHtliKfalvpCNt7BHB-R3C4OzElCWVAVuK4PvWzHasJ_RJWBmn6jP03eVy174wC0LZXo24TjyRQ')"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-surface-container-lowest/20 to-transparent"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto bg-surface-container-highest border-t border-outline-variant">
+<div class="max-w-container-max mx-auto px-margin-desktop py-12">
+<div class="flex flex-col lg:flex-row justify-between gap-12 mb-12">
+<div class="max-w-sm">
+<div class="flex items-center gap-3 mb-6">
+<img alt="FinanceHub Logo" class="w-6 h-6 grayscale opacity-80" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAJnElEQVR4AeydS49URRiGqxovgbhgoRszzEJ/AiTMYMLGhZKg0a2uhB+gIs7IRgY3OoC3HyCsdKtGE3ShCxKnMRl+gixmRjaycGGYoEyXp9EmfTndfS51+arqIdP26XPqVNX3vOfJ0H4xdhR/IACBqQQQZCoaLkBAKQThKYDADAIIMgMOlyCAIDwDEJhBwKEgM1blEgQiIYAgkQTFNsMQQJAw3Fk1EgIIEklQbDMMAQQJw51VIyEQpyCRwGWb8RNAkPgzpAKHBBDEIVymjp8AgsSfIRU4JIAgDuEydfwEEGQsQz5CYJgAggzT4BgCYwQQZAwIHyEwTABBhmlwDIExAggyBoSPEBgmgCDDNNweM3uEBBAkwtDYsj8CCOKPNStFSABBIgyNLfsjgCD+WLNShAQQJMLQJrfMGVcEEMQVWeZNggCCJBFj/SIWlj46cejY+rcLy5/sr393PncgSD5ZP6y0EOMN3el8p5V+Wav7Xypl9MOLHIwQQJARHOl/WDy2vqaVvqKV2tevVmv16sLypU/7x7wmCSDIJJNEz6x1Di1f/EIpfV6N/elo9ebi8vpbY6f/+5j5PxEkgweg/z3j0PL+74vfFqemlWuU+vjQ8vor067neh5BEk/+6cOXn9T6n+ta6xOzSi2uF8+C/mph6dLRWeNyu1ZAya3kfOpdPPLhM/se793QSh+pVLU2f3WMvl9pbCaDECTRoBePXj5sHusUcqhnq5RY/BXrN/13b2nr17M3q4zPZQyCJJj0wvLFF01n73rxm+OpKuUZZTb37nWWtjbP3aoy3taYGOZBkBhSqrHHBz0OrYov5PpAlduMMdeMefT47Ztn71QZn9sYBEko8fEex7zSjFFXtru7J3e6Z3bnjc31OoIkkfz0Hsf08syF7e7KaaXWetPHcAVBIn8GqvQ4hkssvozvFd85Tm1trK4Nn+e4nACClHOJ4mzVHsegmOL7xt3ir1UntzdWrw7ODd4Xj100IV6D9S2/W5sOQayh9DtR3R6HUeYP3dt3fKe78oPfnca9GoJEmB89Dn+hIYg/1lZWosdhBWPlSRCkMqrwA+lx+M8AQfwzb7QiPY5G2FrfNClI6ymZwC4Behx2edabDUHq8fI6mh6HV9yliyFIKZbwJ232OMJXE+8OEERgdos1/zsOehzuQkQQd2wbzUyPoxE2Zzd5FcRZFYlMTI9DXpAIIiQTehxCghjbBoKMAQnxkR5HCOrV1kSQapwcjaLH4QistWkRxBrKehPR46jHK9ToVAQJxa/RuvQ4GmELchOCeMZOj8Mz8JbLIUhLgHVup8dRh5aMsQjiKQd6HJ5AW14GQSwDLZuOHkcZlTjOIcjcnNoNoMfRjl/ouxHEWQL0OJyh9TgxgjiATY/DAdRAUyKIZfD0OCwDDTwdglgMgB6HRZhCpkIQS0E06nHw/+OwRN/dNAhigS09DgsQhU6BIC2DocfREqDw2xGkRUD0OFrAi+RWBGkUFD2ORtgivAlBaoYWS4+jZlkMn0IAQaaAKTtNj6OMStrnEKRivvQ4KoJKbBiCVAiUHkcFSIkOQZA5wdLjmAMo8csIMiNgehylcLI6iSBT4qbHMQVMZqcRZCJwehwTSDI+gSBD4dPjGILB4QMCCPIAg1I2exzPfXDXhHj9XwpvFgkgSAGTHkcBQcSPvE1kLwg9DnkPpaQdZS0IPQ5Jj6LMvWQrCD0OmQ+ktF1lKQg9DmmPodz9ZCYIPQ65j6LjnTWcPhtB6HE0fEIyvy0LQWz2ODJ/XrIrP3lB6HFk90xbLThpQehxWH1WspwsWUHocWT5PFsvuoog1hd1PSE9DteE85k/OUHoceTz8PqoNCFB6HH4eGByWyMJQehx5PbY+qs3ekHocfh7WHJcKbAg7ZDT42jHj7vnE4hWEHoc88NlRHsCUQpCj6N98MxQjUB0gtDjqBYso+wQiEoQehx2QmeW6gQiEaRBj0OZC9vdldNKrfWq42AkBEYJiBeEHsdoYHzyS0C0IPQ4/D4MrDZJQKwg9Dgmw+KMfwIiBaHH4f9BYMVyAiIF2evsHVRGP1G+5dGzRpnNvXudpa3Nc7dGr7j7xMz5EBApyO/d1Z+UMq8ZY2b+GyhjzDVjHj1+++bZO/lERqU+CYgUpA9gu7v6jVbqnf5x2csYdWW7u3typ3tmt+w65yBgg4BYQfrFbXVXP+sZ9Xn/ePRFj2OUB59cERAtSL/one67bxe/Lb7uHxul9orvHKe2NlbX+p95QcA1AfGCKKULPx55XSn1s+n1XtreWL1aHKf6Q13CCEQgiFL97xlbGyvP79x475owfmwncQJRCJJ4BpQnmACCCA6HrYUngCDhM2AHggkgiOBw7G6N2ZoQQJAm1LgnGwIIkk3UFNqEgHhBDv54wYR4NYHJPekREC9IesipKCYCCBJTWlL3mvC+ECThcCmtPQEEac+QGRImgCAJh0tp7QkgSHuGzJAwAQRJONwUSgtdA4KEToD1RRNAENHxsLnQBBAkdAKsL5oAgoiOh82FJoAgoRNg/VAEKq2LIJUwMShXAgiSa/LUXYkAglTCxKBcCSBIrslTdyUCCFIJE4NyJdBMkFxpUXd2BBAku8gpuA4BBKlDi7HZEUCQ7CKn4DoEEKQOLcZmR0CcINklQMGiCSCI6HjYXGgCCBI6AdYXTQBBRMfD5kITQJDQCbC+aAI5CSI6CDYnkwCCyMyFXQkhgCBCgmAbMgkgiMxc2JUQAggiJAi2IZMAgljJhUlSJYAgqSZLXVYIIIgVjEySKgEESTVZ6rJCAEGsYGSSVAkgiPRk2V9QAggSFD+LSycgXpA/XzivQ7zaBPfL+wd0iFebPW9trOgQrzZ79nGveEF8QGANCEwjgCDTyHAeAgUBBCkg5PpD3fMJIMh8RozImACCZBw+pc8ngCDzGTEiYwIIknH4lD6fAILMZ8SI+gSSuQNBkomSQlwQQBAXVJkzGQIIkkyUFOKCAIK4oMqcyRBAkGSizKUQv3UiiF/erBYZAQSJLDC265cAgvjlzWqREUCQyAJju34JIIhf3qwmmUDJ3hCkBAqnIDAggCADErxDoIQAgpRA4RQEBgQQZECCdwiUEECQEiicgsCAgC1BBvPxDoGkCCBIUnFSjG0CCGKbKPMlRQBBkoqTYmwTQBDbRJkvKQIRCJIUb4qJjACCRBYY2/VLAEH88ma1yAggSGSBsV2/BBDEL29Wi4xA3oJEFhbb9U8AQfwzZ8WICCBIRGGxVf8EEMQ/c1aMiACCRBQWW/VPAEEcMWfaNAj8CwAA///G1agZAAAABklEQVQDAHsP0M1l7XDcAAAAAElFTkSuQmCC"/>
+<span class="font-brand_logo text-title-md font-bold text-tertiary">FinanceHub</span>
+</div>
+<p class="font-body-sm text-on-surface-variant">
+                        Providing institutional-grade financial infrastructure for the world's most demanding enterprises. Built for precision, secured for trust.
+                    </p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface mb-6 uppercase">Platform</h4>
+<ul class="space-y-4">
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Overview</a></li>
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Analytics</a></li>
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Enterprise</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface mb-6 uppercase">Resources</h4>
+<ul class="space-y-4">
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Documentation</a></li>
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Security Whitepaper</a></li>
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">API Reference</a></li>
+</ul>
+</div>
+<div class="col-span-2 md:col-span-1">
+<h4 class="font-label-caps text-label-caps text-on-surface mb-6 uppercase">Legal</h4>
+<ul class="space-y-4">
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Compliance</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="pt-8 border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4">
+<span class="font-body-sm text-on-surface-variant">
+                    © 2024 FinanceHub Institutional Services. All rights reserved.
+                </span>
+<div class="flex gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">language</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">account_balance</span>
+</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for active nav states
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                document.querySelectorAll('nav a').forEach(l => {
+                    l.classList.remove('text-primary', 'border-b-2', 'border-primary');
+                    l.classList.add('text-on-surface-variant');
+                });
+                link.classList.remove('text-on-surface-variant');
+                link.classList.add('text-primary', 'border-b-2', 'border-primary');
+            });
+        });
+
+        // Role Card Interaction
+        document.querySelectorAll('.role-card button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'scale(0.98)';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

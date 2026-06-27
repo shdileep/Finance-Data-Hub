@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Compliance &amp; Security | FinanceHub</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#dae2fd",
+                        "primary": "#000000",
+                        "outline": "#76777d",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#131b2e",
+                        "inverse-primary": "#bec6e0",
+                        "on-primary-container": "#7c839b",
+                        "tertiary-fixed-dim": "#adc6ff",
+                        "on-surface": "#0b1c30",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container-low": "#eff4ff",
+                        "secondary": "#006c49",
+                        "on-tertiary-container": "#3980f4",
+                        "surface-container-high": "#dce9ff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#005236",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#4edea3",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#cbdbf5",
+                        "on-surface-variant": "#45464d",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-fixed": "#6ffbbe",
+                        "primary-fixed-dim": "#bec6e0",
+                        "background": "#f8f9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "surface-container": "#e5eeff",
+                        "on-secondary-container": "#00714d",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "inverse-surface": "#213145",
+                        "on-tertiary-fixed": "#001a42",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c6c6cd",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary": "#000000",
+                        "on-tertiary-fixed-variant": "#004395",
+                        "on-primary-fixed": "#131b2e",
+                        "tertiary-fixed": "#d8e2ff",
+                        "tertiary-container": "#001a42",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#002113",
+                        "on-error": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "on-background": "#0b1c30",
+                        "secondary-container": "#6cf8bb",
+                        "surface-tint": "#565e74",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "unit": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "title-md": ["Hanken Grotesk"],
+                        "label-caps": ["Inter"],
+                        "data-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-mono": ["13px", {"lineHeight": "16px", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .data-grid-overlay {
+            background-image: radial-gradient(circle, #c6c6cd 1px, transparent 1px);
+            background-size: 24px 24px;
+            opacity: 0.1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-lg">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full bg-surface-container-lowest border-b border-outline-variant z-50 flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-size: 28px;">account_balance</span>
+<span class="font-headline-lg text-headline-lg font-bold text-primary">FinanceHub</span>
+</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Dashboard</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Markets</a>
+<a class="text-primary font-semibold" href="#">Compliance</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Institutional</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="px-4 py-2 text-primary font-semibold hover:bg-surface-container-low transition-colors rounded">Login</button>
+<button class="px-4 py-2 bg-primary text-on-primary font-semibold rounded hover:opacity-90 transition-opacity">Get Started</button>
+</div>
+</header>
+<main class="relative">
+<!-- Hero Section with subtle animation background -->
+<section class="relative py-20 overflow-hidden border-b border-outline-variant bg-surface-container-low">
+<div class="absolute inset-0 data-grid-overlay"></div>
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
+<div class="max-w-3xl">
+<span class="inline-flex items-center gap-2 px-3 py-1 bg-secondary-container text-on-secondary-container font-label-caps text-label-caps rounded-full mb-6">
+<span class="material-symbols-outlined text-[14px]">verified_user</span>
+                        INSTITUTIONAL GRADE SECURITY
+                    </span>
+<h1 class="font-display-lg text-display-lg text-on-surface mb-6 leading-tight">
+                        Built for Trust. <br/>
+<span class="text-secondary">Certified for Compliance.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-2xl">
+                        FinanceHub operates under the most rigorous global financial standards. Our infrastructure is audited continuously to ensure total data integrity, sovereign privacy, and regulatory alignment for institutional partners.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<div class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant px-4 py-3 rounded">
+<span class="font-bold text-on-surface">SOC2 TYPE II</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant px-4 py-3 rounded">
+<span class="font-bold text-on-surface">GDPR COMPLIANT</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant px-4 py-3 rounded">
+<span class="font-bold text-on-surface">ISO 27001</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Compliance Bento Grid -->
+<section class="py-24 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- GDPR & Privacy -->
+<div class="md:col-span-8 bg-surface-container-lowest border border-outline-variant p-8 rounded-xl hover:border-secondary transition-colors group">
+<div class="flex justify-between items-start mb-12">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-2">GDPR &amp; Global Privacy</h3>
+<p class="text-on-surface-variant max-w-md">Data sovereignty and right-to-be-forgotten protocols are baked into the core architecture of our ledger systems.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-4xl group-hover:text-secondary transition-colors">privacy_tip</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+<div class="space-y-2">
+<div class="font-label-caps text-label-caps text-secondary">ENCRYPTION</div>
+<div class="font-title-md text-title-md text-on-surface">AES-256 At-Rest</div>
+</div>
+<div class="space-y-2">
+<div class="font-label-caps text-label-caps text-secondary">SOVEREIGNTY</div>
+<div class="font-title-md text-title-md text-on-surface">EU Residency</div>
+</div>
+<div class="space-y-2">
+<div class="font-label-caps text-label-caps text-secondary">PROTOCOL</div>
+<div class="font-title-md text-title-md text-on-surface">TLS 1.3 In-Transit</div>
+</div>
+</div>
+</div>
+<!-- SOC2 Certification -->
+<div class="md:col-span-4 bg-primary text-on-primary p-8 rounded-xl relative overflow-hidden">
+<div class="relative z-10 h-full flex flex-col">
+<span class="material-symbols-outlined text-secondary-fixed text-4xl mb-6">verified</span>
+<h3 class="font-headline-lg text-headline-lg mb-4">SOC2 Type II Certified</h3>
+<p class="text-on-primary-container text-body-sm mb-auto">Our security controls are independently audited annually to ensure the highest standards of availability, confidentiality, and processing integrity.</p>
+<button class="mt-8 flex items-center gap-2 font-semibold text-secondary-fixed hover:underline">
+                            Download Audit Report
+                            <span class="material-symbols-outlined">download</span>
+</button>
+</div>
+</div>
+<!-- Audit Logging - Feature Highlight -->
+<div class="md:col-span-12 bg-surface-container-high border border-outline-variant rounded-xl overflow-hidden">
+<div class="grid md:grid-cols-2">
+<div class="p-12">
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-6">Immutable Audit Logging</h3>
+<p class="text-on-surface-variant mb-8 font-body-lg">
+                                FinanceHub maintains a cryptographically signed audit trail of every administrative action, data access request, and configuration change within your environment.
+                            </p>
+<ul class="space-y-4">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">check</span>
+<span class="font-medium">Real-time SIEM integration (Splunk, Datadog)</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">check</span>
+<span class="font-medium">Non-repudiation logging with SHA-256 hashing</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">check</span>
+<span class="font-medium">7-year standard data retention policy</span>
+</li>
+</ul>
+</div>
+<div class="bg-surface-container-lowest p-8 border-l border-outline-variant overflow-x-auto">
+<div class="font-data-mono text-data-mono bg-on-surface text-surface-container-lowest p-6 rounded shadow-inner min-w-[400px]">
+<div class="mb-4 opacity-50 flex justify-between">
+<span>SYSTEM_LOG_SNAPSHOT</span>
+<span>2024-05-24 14:32:01 UTC</span>
+</div>
+<div class="space-y-2">
+<div class="flex gap-4">
+<span class="text-secondary-fixed">[INFO]</span>
+<span class="opacity-70">AUTH_SUCCESS</span>
+<span>User ID: admin_029</span>
+</div>
+<div class="flex gap-4">
+<span class="text-secondary-fixed">[INFO]</span>
+<span class="opacity-70">ACCESS_GRANTED</span>
+<span>Record: TX_9921_PRV</span>
+</div>
+<div class="flex gap-4">
+<span class="text-error">[WARN]</span>
+<span class="opacity-70">POLICY_CHG</span>
+<span>Target: Firewall_Tier_1</span>
+</div>
+<div class="flex gap-4">
+<span class="text-secondary-fixed">[INFO]</span>
+<span class="opacity-70">HASH_SIGN</span>
+<span>Block: 0x82f...a1e</span>
+</div>
+<div class="animate-pulse flex gap-4">
+<span class="text-secondary-fixed">[INFO]</span>
+<span class="opacity-70">LOG_STRM</span>
+<span class="text-secondary-fixed">Broadcasting...</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- KYC/AML and Regional Compliance -->
+<div class="md:col-span-6 bg-surface-container-lowest border border-outline-variant p-8 rounded-xl flex flex-col">
+<div class="bg-secondary-container w-12 h-12 rounded flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-on-secondary-container">policy</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface mb-4">KYC &amp; AML Automation</h3>
+<p class="text-on-surface-variant flex-grow">
+                        Our integrated compliance engine automates Know Your Customer (KYC) and Anti-Money Laundering (AML) screening against 150+ global watchlists including OFAC, UN, and EU Sanctions.
+                    </p>
+<div class="mt-8 pt-6 border-t border-outline-variant flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-secondary">COVERAGE</span>
+<span class="font-data-mono text-data-mono">195 Countries</span>
+</div>
+</div>
+<!-- Resilience and DR -->
+<div class="md:col-span-6 bg-surface-container-lowest border border-outline-variant p-8 rounded-xl flex flex-col">
+<div class="bg-primary-container w-12 h-12 rounded flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary-fixed">cloud_sync</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface mb-4">Operational Resilience</h3>
+<p class="text-on-surface-variant flex-grow">
+                        Multi-region disaster recovery with a recovery point objective (RPO) of &lt; 1 minute and a recovery time objective (RTO) of &lt; 15 minutes for Tier 1 services.
+                    </p>
+<div class="mt-8 pt-6 border-t border-outline-variant flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-secondary">UPTIME SLA</span>
+<span class="font-data-mono text-data-mono">99.99% Guaranteed</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Visual Assurance Section -->
+<section class="bg-on-surface py-24 text-surface-container-lowest">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid md:grid-cols-2 gap-16 items-center">
+<div>
+<h2 class="font-headline-lg text-headline-lg mb-6">Our Security Philosophy</h2>
+<p class="text-on-primary-container font-body-lg mb-8">
+                        Security at FinanceHub is not a bolt-on feature—it is the bedrock of our existence. We employ a "Zero Trust" architecture where every request is verified, regardless of origin.
+                    </p>
+<div class="space-y-6">
+<div class="flex gap-4">
+<span class="w-8 h-8 rounded-full border border-secondary text-secondary flex items-center justify-center shrink-0">1</span>
+<div>
+<h4 class="font-bold text-surface-bright">Least Privilege Access</h4>
+<p class="text-on-primary-container text-body-sm">Granular RBAC ensures users only access what they need.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<span class="w-8 h-8 rounded-full border border-secondary text-secondary flex items-center justify-center shrink-0">2</span>
+<div>
+<h4 class="font-bold text-surface-bright">Continuous Monitoring</h4>
+<p class="text-on-primary-container text-body-sm">AI-driven anomaly detection monitors for suspicious behavior 24/7.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<span class="w-8 h-8 rounded-full border border-secondary text-secondary flex items-center justify-center shrink-0">3</span>
+<div>
+<h4 class="font-bold text-surface-bright">Third-Party Risk Mgmt</h4>
+<p class="text-on-primary-container text-body-sm">Every vendor in our supply chain undergoes rigorous assessment.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="relative h-[400px] bg-primary-container rounded-xl overflow-hidden flex items-center justify-center">
+<!-- Abstract representation of security/data -->
+<div class="absolute inset-0 opacity-20 data-grid-overlay"></div>
+<div class="relative z-10 w-64 h-64 border-[1px] border-secondary-fixed-dim/30 rounded-full flex items-center justify-center animate-[spin_20s_linear_infinite]">
+<div class="w-48 h-48 border-[1px] border-secondary-fixed-dim/50 rounded-full flex items-center justify-center animate-[spin_15s_linear_infinite_reverse]">
+<div class="w-32 h-32 bg-secondary-fixed-dim/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-fixed text-5xl" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+</div>
+</div>
+<!-- Orbiting dots -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-[300px] h-[300px] border border-on-primary-container/10 rounded-full animate-[spin_10s_linear_infinite]">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-secondary rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Compliance Resources Table -->
+<section class="py-24 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-12">Compliance Documents</h2>
+<div class="border border-outline-variant rounded-xl overflow-hidden bg-surface-container-lowest">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container border-b border-outline-variant">
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface">DOCUMENT NAME</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface">CATEGORY</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface">VERSION</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface">LAST UPDATED</th>
+<th class="px-6 py-4 text-right font-label-caps text-label-caps text-on-surface">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-medium text-on-surface">Privacy Policy (v2.4)</td>
+<td class="px-6 py-4"><span class="px-2 py-1 bg-surface-container rounded text-body-sm">Legal</span></td>
+<td class="px-6 py-4 font-data-mono text-data-mono">2.4.1</td>
+<td class="px-6 py-4 text-on-surface-variant">May 12, 2024</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:underline font-semibold flex items-center gap-1 justify-end">View <span class="material-symbols-outlined text-[18px]">open_in_new</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-medium text-on-surface">Information Security Policy</td>
+<td class="px-6 py-4"><span class="px-2 py-1 bg-surface-container rounded text-body-sm">Security</span></td>
+<td class="px-6 py-4 font-data-mono text-data-mono">1.9.0</td>
+<td class="px-6 py-4 text-on-surface-variant">Apr 05, 2024</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:underline font-semibold flex items-center gap-1 justify-end">View <span class="material-symbols-outlined text-[18px]">open_in_new</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-medium text-on-surface">Data Processing Addendum (DPA)</td>
+<td class="px-6 py-4"><span class="px-2 py-1 bg-surface-container rounded text-body-sm">GDPR</span></td>
+<td class="px-6 py-4 font-data-mono text-data-mono">3.0.2</td>
+<td class="px-6 py-4 text-on-surface-variant">Jan 18, 2024</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:underline font-semibold flex items-center gap-1 justify-end">View <span class="material-symbols-outlined text-[18px]">open_in_new</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-medium text-on-surface">Business Continuity Plan</td>
+<td class="px-6 py-4"><span class="px-2 py-1 bg-surface-container rounded text-body-sm">Operations</span></td>
+<td class="px-6 py-4 font-data-mono text-data-mono">2.2.0</td>
+<td class="px-6 py-4 text-on-surface-variant">Feb 22, 2024</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:underline font-semibold flex items-center gap-1 justify-end">View <span class="material-symbols-outlined text-[18px]">open_in_new</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-24">
+<div class="bg-secondary p-12 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="text-center md:text-left">
+<h3 class="font-headline-lg text-headline-lg text-on-secondary mb-2">Need detailed audit materials?</h3>
+<p class="text-secondary-fixed text-body-lg">Institutional partners can request full SOC2 reports and pentest results.</p>
+</div>
+<button class="bg-on-secondary text-secondary px-8 py-4 rounded font-bold hover:bg-surface-bright transition-colors shadow-lg">
+                    Contact Compliance Desk
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container border-t border-outline-variant w-full">
+<div class="flex flex-col md:flex-row justify-between items-center py-12 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto gap-8">
+<div class="flex flex-col items-center md:items-start gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+<span class="font-title-md text-title-md font-bold text-primary">FinanceHub</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs text-center md:text-left">
+                    Professional infrastructure for institutional digital asset management and settlement.
+                </p>
+</div>
+<div class="flex flex-col items-center md:items-end gap-6">
+<nav class="flex gap-6">
+<a class="text-on-surface-variant hover:text-primary underline transition-all font-body-sm text-body-sm" href="#">Privacy</a>
+<a class="text-on-surface-variant hover:text-primary underline transition-all font-body-sm text-body-sm" href="#">Terms</a>
+<a class="text-secondary font-medium underline transition-all font-body-sm text-body-sm" href="#">Compliance</a>
+</nav>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                    © 2024 FinanceHub Institutional. All rights reserved.
+                </p>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interaction for the log snapshot text
+        document.addEventListener('DOMContentLoaded', () => {
+            const logs = document.querySelectorAll('.font-data-mono div');
+            logs.forEach((log, index) => {
+                log.style.opacity = '0';
+                log.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    log.style.transition = 'all 0.4s ease';
+                    log.style.opacity = log.classList.contains('opacity-50') ? '0.5' : (log.classList.contains('opacity-70') ? '0.7' : '1');
+                    log.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body></html>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User as UserIcon, Shield, CheckCircle, Mail, Calendar, Lock, ExternalLink, Ban } from 'lucide-react';
+import { User as UserIcon, Shield, CheckCircle, Mail, Calendar, Lock, ExternalLink, Ban, BarChart2 } from 'lucide-react';
 import { User } from '../types';
 import { PageLoading } from './Analytics';
 
@@ -136,20 +136,37 @@ export default function Profile({ user }: { user: User }) {
                 <ExternalLink className="w-3.5 h-3.5 text-emerald-400/50 group-hover:text-emerald-400 transition-colors shrink-0" />
               </button>
             ) : (
-              <div
+              <button
                 key={p.label}
-                className="flex items-center gap-3 p-3 rounded-xl border bg-bg-primary/30 border-border-primary/30 opacity-50 cursor-not-allowed"
+                onClick={() => navigate('/help')}
+                className="flex items-center gap-3 p-3 rounded-xl border bg-bg-primary/30 border-border-primary/30 opacity-70 hover:opacity-100 hover:border-slate-600 transition-all text-left cursor-pointer"
               >
                 <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-slate-500/20">
                   <Ban className="w-3.5 h-3.5 text-slate-500" />
                 </div>
-                <span className="text-sm font-medium text-text-secondary flex-1">{p.label}</span>
-                <Lock className="w-3.5 h-3.5 text-slate-500/50 shrink-0" />
-              </div>
+                <span className="text-sm font-medium text-text-secondary flex-1">{p.label} (See Glossary)</span>
+                <ExternalLink className="w-3.5 h-3.5 text-slate-500/50 shrink-0" />
+              </button>
             )
           ))}
         </div>
       </div>
+
+      {/* Saved Scenarios Quick Links for Analyst */}
+      {fullUser.role === 'Analyst' && (
+        <div className="glass-card p-6 space-y-4">
+          <h3 className="text-base font-bold text-text-primary flex items-center gap-2">
+            <BarChart2 className="w-5 h-5 text-brand-500" /> Saved Scenarios &amp; Forecasting Models
+          </h3>
+          <p className="text-xs text-text-secondary">Quick links to load your forecasting models directly in your workspace.</p>
+          <button 
+            onClick={() => navigate('/forecast')}
+            className="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded text-xs font-bold uppercase transition-colors"
+          >
+            Load forecasting Workspace
+          </button>
+        </div>
+      )}
     </div>
   );
 }

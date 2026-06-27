@@ -1,7 +1,3 @@
-/**
- * Middleware — Authentication and Role-Based Access Control
- * Separated from routes for reuse and clean architecture.
- */
 import { Request, Response, NextFunction } from 'express';
 import { UserModel } from '../models/index.ts';
 
@@ -9,6 +5,7 @@ import { UserModel } from '../models/index.ts';
  * Mock authentication middleware.
  * Validates the x-user-id header and attaches the user object to req.user.
  * Rejects inactive users.
+ * Also supports x-view-as-user-id for Admin impersonation-lite in read-only mode.
  */
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   const userId = req.headers['x-user-id'];
@@ -20,15 +17,27 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     return res.status(401).json({ error: 'Unauthorized', message: 'User not found or inactive' });
   }
   (req as any).user = user;
+
+  // View-as impersonation mode for Admins
+  const viewAsId = req.headers['x-view-as-user-id'];
+  if (viewAsId && user.role === 'Admin') {
+    // If the request method is mutating, reject it (must be read-only!)
+    if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
+      return res.status(403).json({ error: 'Forbidden', message: 'Mutations are disabled during impersonation.' });
+    }
+    const targetUser = UserModel.findActiveById(viewAsId as string);
+    if (targetUser) {
+      (req as any).user = targetUser;
+      (req as any).isAdminImpersonating = true;
+    }
+  }
+
   next();
 };
 
 /**
  * Role-based authorization middleware factory.
  * Returns a middleware that only allows the specified roles through.
- *
- * @example authorize('Admin')
- * @example authorize('Admin', 'Analyst')
  */
 export const authorize = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {

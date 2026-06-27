@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, Trash2, Edit2, X, AlertCircle, RefreshCw } from 'lucide-react';
+import { Plus, Search, Trash2, Edit2, X, AlertCircle, RefreshCw, Flag, History } from 'lucide-react';
 import { Transaction, User } from '../types';
 
 export default function Transactions({ user }: { user: User }) {
@@ -11,6 +11,26 @@ export default function Transactions({ user }: { user: User }) {
   const [filters, setFilters] = useState({ type: '', startDate: '', endDate: '', search: '' });
   const [page, setPage] = useState(0);
   const LIMIT = 10;
+  const [auditTx, setAuditTx] = useState<Transaction | null>(null);
+
+  const handleReassignCategory = (tx: Transaction, newCat: string) => {
+    fetch(`/api/transactions/${tx.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'x-user-id': user.id.toString() },
+      body: JSON.stringify({ ...tx, category: newCat })
+    }).then(res => {
+      if (res.ok) fetchTransactions();
+    });
+  };
+
+  const handleToggleFlag = (id: number) => {
+    fetch(`/api/transactions/${id}/flag`, {
+      method: 'PUT',
+      headers: { 'x-user-id': user.id.toString() }
+    }).then(res => {
+      if (res.ok) fetchTransactions();
+    });
+  };
 
   const [formData, setFormData] = useState({
     amount: '', type: 'expense' as 'income' | 'expense',
@@ -158,7 +178,7 @@ export default function Transactions({ user }: { user: User }) {
                   </div>
                 </td></tr>
               ) : transactions.length === 0 ? (
-                <tr><td colSpan={canWrite ? 6 : 5} className="px-6 py-12 text-center text-text-secondary font-medium">
+                <tr><td colSpan={canWrite ? 7 : 5} className="px-6 py-12 text-center text-text-secondary font-medium">
                   No transactions found.{canWrite ? ' Click "Add Transaction" to create one.' : ''}
                 </td></tr>
               ) : (
@@ -166,9 +186,34 @@ export default function Transactions({ user }: { user: User }) {
                   <tr key={tx.id} className="hover:bg-bg-primary/40 transition-colors">
                     <td className="px-6 py-4 text-sm text-text-secondary font-medium">{tx.date}</td>
                     <td className="px-6 py-4 text-sm">
-                      <span className="px-3 py-1 rounded-full bg-bg-primary border border-border-primary text-xs font-bold text-text-secondary">{tx.category}</span>
+                      {canWrite ? (
+                        <select 
+                          value={tx.category} 
+                          onChange={(e) => handleReassignCategory(tx, e.target.value)}
+                          className="bg-bg-primary border border-border-primary rounded text-xs font-bold text-text-secondary px-2 py-1 appearance-none focus:outline-none"
+                        >
+                          <option value="Salary">Salary</option>
+                          <option value="Rent">Rent</option>
+                          <option value="Groceries">Groceries</option>
+                          <option value="Utilities">Utilities</option>
+                          <option value="Freelance">Freelance</option>
+                          <option value="Insurance">Insurance</option>
+                          <option value="Dining">Dining</option>
+                          <option value="Consulting">Consulting</option>
+                          <option value={tx.category}>{tx.category}</option>
+                        </select>
+                      ) : (
+                        <span className="px-3 py-1 rounded-full bg-bg-primary border border-border-primary text-xs font-bold text-text-secondary">{tx.category}</span>
+                      )}
                     </td>
-                    <td className="px-6 py-4 text-sm text-text-secondary font-medium">{tx.description || '—'}</td>
+                    <td className="px-6 py-4 text-sm text-text-secondary font-medium">
+                      <div className="flex items-center gap-2">
+                        {tx.is_flagged === 1 && (
+                          <span className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[10px] font-bold px-1.5 py-0.5 rounded font-mono">FLAGGED</span>
+                        )}
+                        <span>{tx.description || '—'}</span>
+                      </div>
+                    </td>
                     <td className="px-6 py-4 text-sm">
                       <span className={`px-3 py-1.5 rounded-full text-xs font-medium border ${tx.type === 'income' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-rose-500/10 border-rose-500/20 text-rose-400'}`}>{tx.type}</span>
                     </td>
@@ -177,8 +222,14 @@ export default function Transactions({ user }: { user: User }) {
                     </td>
                     {canWrite && (
                       <td className="px-6 py-4 text-right space-x-2">
-                        <button onClick={() => openEdit(tx)} className="p-1.5 text-text-secondary hover:text-brand-500 hover:bg-brand-500/10 rounded-lg transition-all"><Edit2 className="w-4 h-4" /></button>
-                        <button onClick={() => handleDelete(tx.id)} className="p-1.5 text-text-secondary hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all"><Trash2 className="w-4 h-4" /></button>
+                        <button onClick={() => handleToggleFlag(tx.id)} className={`p-1.5 rounded-lg transition-all border ${tx.is_flagged === 1 ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'text-text-secondary hover:text-rose-400 hover:bg-rose-500/10 border-transparent'}`} title="Flag for Review">
+                          <Flag className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => setAuditTx(tx)} className="p-1.5 text-text-secondary hover:text-brand-400 hover:bg-brand-500/10 border border-transparent rounded-lg transition-all" title="Audit Log">
+                          <History className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => openEdit(tx)} className="p-1.5 text-text-secondary hover:text-brand-500 hover:bg-brand-500/10 border border-transparent rounded-lg transition-all" title="Edit"><Edit2 className="w-4 h-4" /></button>
+                        <button onClick={() => handleDelete(tx.id)} className="p-1.5 text-text-secondary hover:text-rose-500 hover:bg-rose-500/10 border border-transparent rounded-lg transition-all" title="Delete"><Trash2 className="w-4 h-4" /></button>
                       </td>
                     )}
                   </tr>
@@ -246,6 +297,46 @@ export default function Transactions({ user }: { user: User }) {
                   className="flex-1 px-4 py-2.5 text-white bg-brand-600 hover:bg-brand-500 rounded-xl font-bold transition-colors shadow-[0_0_15px_rgba(99,102,241,0.3)]">{editingTx ? 'Update' : 'Save'}</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {auditTx && (
+        <div className="fixed inset-0 bg-bg-primary/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in">
+          <div className="glass-card w-full max-w-md border border-border-primary p-6 space-y-6">
+            <div className="flex justify-between items-center pb-4 border-b border-slate-800">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <History className="w-5 h-5 text-brand-500" /> Transaction Audit Log
+              </h3>
+              <button onClick={() => setAuditTx(null)} className="text-slate-400 hover:text-white transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="space-y-4 text-sm text-slate-300">
+              <div>
+                <span className="text-slate-500 font-bold block text-xs uppercase tracking-wider">Transaction ID</span>
+                <span className="font-mono text-white font-semibold">{auditTx.id}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 font-bold block text-xs uppercase tracking-wider">Owner / Created By</span>
+                <span>User ID: <span className="font-mono text-white font-semibold">{auditTx.userId}</span></span>
+              </div>
+              <div>
+                <span className="text-slate-500 font-bold block text-xs uppercase tracking-wider">Creation Date</span>
+                <span className="font-mono text-white font-semibold">{auditTx.date}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 font-bold block text-xs uppercase tracking-wider">Security Anomaly Status</span>
+                {auditTx.amount > 10000 ? (
+                  <span className="text-rose-400 font-semibold flex items-center gap-1.5 mt-0.5">
+                    <AlertCircle className="w-4 h-4" /> Triggered Anomaly Alert rule (&gt; $10k limit)
+                  </span>
+                ) : (
+                  <span className="text-emerald-400 font-semibold flex items-center gap-1.5 mt-0.5">
+                    Passed all automated safety checks
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}

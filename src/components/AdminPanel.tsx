@@ -25,8 +25,63 @@ export default function AdminPanel({ user }: { user: User }) {
   const [bulkJson, setBulkJson] = useState('');
   const [showBulkImport, setShowBulkImport] = useState(false);
   const [liveStatus, setLiveStatus] = useState<'connecting' | 'live' | 'offline'>('connecting');
+  const [sandboxActive, setSandboxActive] = useState(false);
+  const [backupFreq, setBackupFreq] = useState('daily');
+  const [backups, setBackups] = useState<any[]>([]);
 
   const headers = { 'Content-Type': 'application/json', 'x-user-id': user.id.toString() };
+
+  const fetchBackups = useCallback(() => {
+    fetch('/api/admin/backups', { headers })
+      .then(res => res.json())
+      .then(data => setBackups(Array.isArray(data) ? data : []))
+      .catch(console.error);
+  }, [user.id]);
+
+  useEffect(() => {
+    fetchBackups();
+  }, [fetchBackups]);
+
+  const handleToggleSandbox = () => {
+    const nextVal = !sandboxActive;
+    fetch('/api/admin/sandbox-mode', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ activate: nextVal })
+    })
+      .then(res => res.json())
+      .then(data => {
+        setSandboxActive(data.sandboxActive);
+        setActionResult({ type: 'success', message: nextVal ? 'Sandbox Mode activated. Database hot-swapped to in-memory mode.' : 'Sandbox Mode deactivated.' });
+        fetchStats();
+      })
+      .catch(err => setActionResult({ type: 'error', message: err.message }));
+  };
+
+  const handleCreateBackup = () => {
+    fetch('/api/admin/backups', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ frequency: backupFreq })
+    })
+      .then(res => res.json())
+      .then(() => {
+        fetchBackups();
+        setActionResult({ type: 'success', message: `Scheduled ${backupFreq} backup.` });
+      });
+  };
+
+  const handleManualBackup = () => {
+    fetch('/api/admin/backups/run', {
+      method: 'POST',
+      headers
+    })
+      .then(res => res.json())
+      .then(() => {
+        fetchBackups();
+        setActionResult({ type: 'success', message: 'Manual backup executed successfully.' });
+      });
+  };
 
   const fetchStats = useCallback(() => {
     setLoading(true); setError(null);
@@ -300,6 +355,70 @@ export default function AdminPanel({ user }: { user: User }) {
               </p>
             </div>
           )}
+
+          {/* Sandbox Mode Panel */}
+          <div className="mt-8 pt-6 border-t border-border-primary/30 space-y-4">
+            <h4 className="text-xs font-bold text-text-primary uppercase tracking-wider flex items-center gap-1.5">
+              <HardDrive className="w-4 h-4 text-brand-500" /> Database Sandbox
+            </h4>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-slate-400">Memory Isolated mode</span>
+              <button 
+                onClick={handleToggleSandbox}
+                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors ${
+                  sandboxActive 
+                    ? 'bg-amber-500 text-slate-900 hover:bg-amber-400' 
+                    : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+                }`}
+              >
+                {sandboxActive ? 'SANDBOX ACTIVE' : 'ACTIVATE SANDBOX'}
+              </button>
+            </div>
+          </div>
+
+          {/* Scheduled Backups Panel */}
+          <div className="mt-8 pt-6 border-t border-border-primary/30 space-y-4">
+            <h4 className="text-xs font-bold text-text-primary uppercase tracking-wider flex items-center gap-1.5">
+              <Database className="w-4 h-4 text-brand-500" /> Scheduled Backups
+            </h4>
+            <div className="flex gap-2">
+              <select 
+                value={backupFreq} 
+                onChange={e => setBackupFreq(e.target.value)}
+                className="bg-bg-primary border border-border-primary rounded px-2.5 py-1 text-xs text-text-primary"
+              >
+                <option value="daily">Daily Schedule</option>
+                <option value="weekly">Weekly Schedule</option>
+              </select>
+              <button 
+                onClick={handleCreateBackup}
+                className="bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded transition-colors"
+              >
+                Save
+              </button>
+            </div>
+            
+            <div className="flex justify-between items-center">
+              <span className="text-[10px] text-slate-500">Run manual backup:</span>
+              <button 
+                onClick={handleManualBackup}
+                className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px] font-bold uppercase transition-colors"
+              >
+                Backup Now
+              </button>
+            </div>
+
+            <div className="space-y-1.5 max-h-[140px] overflow-y-auto pr-1">
+              {backups.map(b => (
+                <div key={b.id} className="flex justify-between items-center text-[10px] text-slate-400 border-t border-slate-800 pt-2">
+                  <span className="font-semibold uppercase">{b.frequency}</span>
+                  <span className="font-mono text-slate-500">
+                    {b.last_run ? `Run: ${new Date(b.last_run).toLocaleTimeString()}` : 'Scheduled'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>

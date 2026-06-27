@@ -14,6 +14,7 @@ export interface Transaction {
   date: string;
   description: string | null;
   userId: number;
+  is_flagged?: number;
 }
 
 export interface Summary {

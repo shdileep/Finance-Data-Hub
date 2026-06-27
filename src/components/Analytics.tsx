@@ -17,6 +17,60 @@ export default function Analytics({ user }: { user: User }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Formula Builder State
+  const [formula, setFormula] = useState('');
+  const [formulaResult, setFormulaResult] = useState<number | null>(null);
+  const [formulaError, setFormulaError] = useState<string | null>(null);
+
+  // Pinned Charts State
+  const [pinnedCharts, setPinnedCharts] = useState<string[]>([]);
+
+  useEffect(() => {
+    const pinned = localStorage.getItem('pinnedCharts');
+    if (pinned) setPinnedCharts(JSON.parse(pinned));
+  }, []);
+
+  const togglePinChart = (chartName: string) => {
+    setPinnedCharts(prev => {
+      const next = new Set(prev);
+      if (next.has(chartName)) {
+        next.delete(chartName);
+        alert(`Chart "${chartName}" unpinned from Dashboard.`);
+      } else {
+        next.add(chartName);
+        alert(`Chart "${chartName}" pinned to Dashboard!`);
+      }
+      const arr = Array.from(next);
+      localStorage.setItem('pinnedCharts', JSON.stringify(arr));
+      return arr;
+    });
+  };
+
+  const handleEvaluateFormula = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormulaError(null);
+    setFormulaResult(null);
+
+    let sanitized = formula.replace(/Income/gi, (summary?.totalIncome || 0).toString());
+    sanitized = sanitized.replace(/Expense/gi, (summary?.totalExpense || 0).toString());
+
+    if (/[^0-9\+\-\*\/\(\)\s\.]/.test(sanitized)) {
+      setFormulaError('Invalid characters. Use tokens "Income" and "Expense", and operators (+, -, *, /).');
+      return;
+    }
+
+    try {
+      const result = new Function(`return (${sanitized})`)();
+      if (typeof result === 'number' && !isNaN(result)) {
+        setFormulaResult(result);
+      } else {
+        setFormulaError('Returned invalid result.');
+      }
+    } catch (err: any) {
+      setFormulaError(err.message || 'Syntax error.');
+    }
+  };
+
   // Advanced Filters
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
@@ -225,7 +279,7 @@ export default function Analytics({ user }: { user: User }) {
       )}
 
       {/* Filtered KPI Row */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
         <KpiCard label="Filtered Income" value={`$${filteredIncome.toLocaleString()}`} sub={`${filteredTx.filter(t => t.type === 'income').length} records`} color="emerald" />
         <KpiCard label="Filtered Expense" value={`$${filteredExpense.toLocaleString()}`} sub={`${filteredTx.filter(t => t.type === 'expense').length} records`} color="rose" />
         <KpiCard label="Net Balance" value={`$${filteredNet.toLocaleString()}`} sub={filteredNet >= 0 ? 'surplus' : 'deficit'} color={filteredNet >= 0 ? 'brand' : 'rose'} />
@@ -234,12 +288,53 @@ export default function Analytics({ user }: { user: User }) {
         <KpiCard label="Largest" value={`$${largestTx.toLocaleString()}`} sub="single transaction" color="amber" />
       </div>
 
+      {/* Custom Formula Builder */}
+      <div className="glass-card p-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        <div>
+          <h3 className="text-lg font-bold text-white">Custom Formula Builder</h3>
+          <p className="text-slate-400 text-xs mt-1">Compose equations using "Income" and "Expense".</p>
+        </div>
+        <form onSubmit={handleEvaluateFormula} className="col-span-2 flex flex-col sm:flex-row gap-4 items-end sm:items-center">
+          <div className="flex-1 w-full">
+            <input 
+              type="text"
+              value={formula}
+              onChange={e => setFormula(e.target.value)}
+              placeholder="e.g. (Income - Expense) * 0.85"
+              required
+              className="w-full bg-[#131b2e] border border-slate-700 rounded px-4 py-2 text-white text-sm font-semibold"
+            />
+            {formulaError && <p className="text-rose-400 text-xs mt-1">{formulaError}</p>}
+          </div>
+          <button 
+            type="submit"
+            className="bg-brand-600 hover:bg-brand-500 text-white font-bold px-5 py-2.5 rounded text-xs uppercase tracking-wider transition-colors shrink-0"
+          >
+            Evaluate
+          </button>
+          {formulaResult !== null && (
+            <div className="shrink-0 font-mono text-base font-bold text-brand-400 bg-brand-500/10 border border-brand-500/20 px-4 py-2 rounded">
+              Result: ${formulaResult.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </div>
+          )}
+        </form>
+      </div>
+
       {/* Daily Activity Chart with Toggle */}
       <div className="glass-card p-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold flex items-center gap-2 text-text-primary">
-            <Activity className="w-5 h-5 text-brand-500" /> Daily Activity
-          </h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-lg font-semibold flex items-center gap-2 text-text-primary">
+              <Activity className="w-5 h-5 text-brand-500" /> Daily Activity
+            </h3>
+            <button 
+              onClick={() => togglePinChart('Daily Activity')}
+              className="px-2 py-0.5 border border-brand-500/30 text-brand-400 hover:bg-brand-500/10 rounded text-[10px] font-bold uppercase transition-all"
+              title="Pin to Dashboard"
+            >
+              Pin Chart
+            </button>
+          </div>
           <div className="flex items-center gap-2">
             <button onClick={() => setShowIncome(!showIncome)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${showIncome ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-bg-secondary border-border-primary text-text-secondary'}`}>

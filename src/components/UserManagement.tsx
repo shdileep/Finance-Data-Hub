@@ -9,8 +9,23 @@ export default function UserManagement() {
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({ name: '', email: '', role: 'Viewer' as User['role'], status: 'active' as User['status'] });
+  const [showLogsDrawer, setShowLogsDrawer] = useState(false);
+  const [impersonationLogs, setImpersonationLogs] = useState<any[]>([]);
 
   const adminId = localStorage.getItem('userId') || '';
+
+  const handleForceReset = (id: number) => {
+    alert(`Mock password reset flow triggered. User ID ${id} session invalidated.`);
+  };
+
+  useEffect(() => {
+    if (showLogsDrawer) {
+      fetch('/api/admin/impersonation-logs', { headers: { 'x-user-id': adminId } })
+        .then(res => res.json())
+        .then(setImpersonationLogs)
+        .catch(console.error);
+    }
+  }, [showLogsDrawer, adminId]);
 
   const fetchUsers = useCallback(() => {
     setLoading(true);
@@ -70,10 +85,16 @@ export default function UserManagement() {
           <h2 className="text-3xl font-display font-bold text-text-primary mb-2">User Management</h2>
           <p className="text-text-secondary font-medium">Create, edit and manage system users and their roles.</p>
         </div>
-        <button onClick={() => { resetForm(); setShowModal(true); }}
-          className="flex items-center gap-2 px-6 py-3 bg-brand-600 text-white rounded-xl font-medium hover:bg-brand-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all">
-          <UserPlus className="w-5 h-5" /> Add User
-        </button>
+        <div className="flex items-center gap-3">
+          <button onClick={() => setShowLogsDrawer(true)}
+            className="flex items-center gap-2 px-4 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white rounded-xl font-medium transition-all">
+            Impersonation History
+          </button>
+          <button onClick={() => { resetForm(); setShowModal(true); }}
+            className="flex items-center gap-2 px-6 py-3 bg-brand-600 text-white rounded-xl font-medium hover:bg-brand-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all">
+            <UserPlus className="w-5 h-5" /> Add User
+          </button>
+        </div>
       </header>
 
       <div className="glass-card overflow-hidden">
@@ -133,6 +154,7 @@ export default function UserManagement() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
+                      <button onClick={() => handleForceReset(u.id)} className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-rose-450 bg-rose-500/5 hover:bg-rose-500/15 border border-rose-500/20 rounded transition-all">Force Reset</button>
                       <button onClick={() => openEdit(u)} className="p-1.5 text-text-secondary hover:text-brand-500 hover:bg-brand-500/10 rounded-lg transition-all"><Edit2 className="w-4 h-4" /></button>
                       <button onClick={() => handleDelete(u.id)} className="p-1.5 text-text-secondary hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all"><Trash2 className="w-4 h-4" /></button>
                     </td>
@@ -211,6 +233,32 @@ export default function UserManagement() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {showLogsDrawer && (
+        <div className="fixed inset-0 bg-bg-primary/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in">
+          <div className="glass-card w-full max-w-lg border border-border-primary p-6 space-y-6">
+            <div className="flex justify-between items-center pb-4 border-b border-slate-800">
+              <h3 className="text-xl font-display font-bold text-text-primary">Impersonation Logs</h3>
+              <button onClick={() => setShowLogsDrawer(false)} className="text-text-secondary hover:text-text-primary"><X className="w-6 h-6" /></button>
+            </div>
+            <div className="space-y-4 max-h-[350px] overflow-y-auto pr-2 divide-y divide-slate-800">
+              {impersonationLogs.length === 0 ? (
+                <p className="text-xs text-slate-500 italic py-4">No view-as logs recorded yet.</p>
+              ) : (
+                impersonationLogs.map(log => (
+                  <div key={log.id} className="py-3 flex justify-between items-center text-xs">
+                    <div>
+                      <span className="font-bold text-white">{log.adminName}</span>
+                      <span className="text-slate-400"> impersonated </span>
+                      <span className="font-bold text-brand-400">{log.targetName}</span>
+                    </div>
+                    <span className="text-slate-500 font-mono">{new Date(log.created_at).toLocaleString()}</span>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
       )}
